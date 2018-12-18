@@ -7,6 +7,19 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// import ManageCookie from './script/cookie/ManageCookie';
+
+// document.cookie = 'appToken=7a4b758e-cc2e-4ff4-9e52-7ba07520c168;';
+// document.cookie = 'appUser=U01;';
+
+// var abc = new ManageCookie();
+// var strCookie = abc.getCookie('appToken');
+// console.log('-->', strCookie, abc.getCookie('appUser'))
+
+// sessionStorage.setItem('myData', 777);
+
+console.log('index.js display cookies :',document.cookie);
+
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

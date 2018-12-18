@@ -23,6 +23,8 @@ import {
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
+import CheckTokenCookie from '../../script/cookie/CheckTokenCookie'
+
 // import Widget03 from '../../views/Widgets/Widget03'
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 const Loading = () => <div>Loading...</div>
@@ -454,10 +456,19 @@ const mainChartOpts = {
   },
 };
 
+async function asyncCheckTokenCookie () {
+  var result = false
+  var checkTokenCookie = new CheckTokenCookie()
+  result = await checkTokenCookie.getStatusCheck()
+  if (!result) {
+    window.location = '/#/Login'
+  }
+}
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
-
+    console.log('Component Dashboard!!!')
     this.toggle = this.toggle.bind(this);
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 
@@ -465,6 +476,7 @@ class Dashboard extends Component {
       dropdownOpen: false,
       radioSelected: 2,
     };
+    asyncCheckTokenCookie()
   }
 
   toggle() {

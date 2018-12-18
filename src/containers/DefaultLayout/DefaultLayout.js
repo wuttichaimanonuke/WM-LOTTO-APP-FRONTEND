@@ -23,6 +23,10 @@ import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
 
 class DefaultLayout extends Component {
+  constructor(props){
+    super(props);
+    console.log('=>DefaultLayout Component doing.<=');
+  }
   render() {
     return (
       <div className="app">
