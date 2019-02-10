@@ -2,14 +2,6 @@ import React from 'react'
 import ManageCookie from './ManageCookie'
 import ConfigurationApi from '../config/ConfigurationApi'
 
-async function asyncFetchCheckTokenAndUid (urlApi, options) {
-    var result = false
-    const res = await fetch(urlApi, options)
-    const response = await res.json()
-    result = await response.result
-    return result
-}
-
 class CheckTokenCookie extends React.Component {
 
     constructor(props) {
@@ -41,6 +33,19 @@ class CheckTokenCookie extends React.Component {
         }
     }
 
+    asyncFetchCheckTokenAndUid = async (urlApi, options) => {
+        const response = await( await (fetch(urlApi, options)
+                                        .then(res => {
+                                            return res.json()
+                                        })
+                                        .catch(err => {
+                                            console.log('error : ',err)
+                                        })
+                                    )
+                            )
+        return await response.result
+    }
+
     checkParametor=()=>{
         if ((this.state.tokenApp === null) || (this.state.tokenApp === '') || (this.state.uIdApp === null) || (this.state.uIdApp === '')) {
             return false
@@ -51,7 +56,7 @@ class CheckTokenCookie extends React.Component {
 
     getStatusCheck=()=>{
         if (this.checkParametor()) {
-            return asyncFetchCheckTokenAndUid(this.state.urlApi, this.state.options)
+            return this.asyncFetchCheckTokenAndUid(this.state.urlApi, this.state.options)
         }
         return false
     }

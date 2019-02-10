@@ -2,24 +2,6 @@ import React from 'react'
 import { isNullOrUndefined, isNull } from 'util'
 import ConfigurationApi from '../../../script/config/ConfigurationApi'
 
-async function loginAppliction (urlApi, headerOptions) {
-    try {
-      const res = await fetch(urlApi, headerOptions)
-      const response = await res.json()
-      if ( (isNullOrUndefined(response.token)) || (isNullOrUndefined(response.uId)) ) {
-        return false
-      } else {
-        document.cookie = 'appToken='+response.token+';'
-        document.cookie = 'appUser='+response.uId+';'
-        sessionStorage.setItem('appToken', response.token)
-        sessionStorage.setItem('appUser', response.uId)
-        return true
-      }
-    } catch (error) {
-      return false
-    }
-  }
-
 class LoginApp extends React.Component {
 
     constructor(props) {
@@ -29,7 +11,19 @@ class LoginApp extends React.Component {
             username : props.username
             ,password : props.password
             ,statusCheck : false 
+            ,urlApi : configurationApi.getApiFullByApiName('login_app_login_func')
+            ,options : {
+                method: 'post'
+                , headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                    , 'Accept': 'application/json;charset=UTF-8'
+                    , 'Access-Control-Allow-Origin': '*'
+                    , 'username': props.username
+                    , 'password': props.password
+                }
+            }
             // ,urlApi : 'http://localhost:8888/login_app/login'
+            /*
             ,urlApi : configurationApi.getApiFullByApiName('login_app_login')
             ,options : {
                 method: 'post'
@@ -49,11 +43,44 @@ class LoginApp extends React.Component {
                     }
                 )
             }
+            */
         }
     }
 
-    loginApp=()=>{
-        return loginAppliction(this.state.urlApi, this.state.options)
+    callLoginApp = async (urlApi, headerOptions) => {
+        const response = await ( await ( fetch(urlApi, headerOptions)
+                                            .then(res => {
+                                                return res.json()
+                                            })
+                                            .catch(err => {
+                                                console.log('error : ',err)
+                                            })
+                                        )
+                                )
+        return await response
+    }
+
+    setCookiesSessionData = async (loginJsonData) => {
+        if ( (isNullOrUndefined(loginJsonData.token)) || (isNullOrUndefined(loginJsonData.uId)) ) {
+            document.cookie = ''
+            document.cookie = ''
+            sessionStorage.setItem('appToken', null)
+            sessionStorage.setItem('appUser', null)
+            return false
+          } else {
+            document.cookie = 'appToken='+loginJsonData.token+';'
+            document.cookie = 'appUser='+loginJsonData.uId+';'
+            sessionStorage.setItem('appToken', loginJsonData.token)
+            sessionStorage.setItem('appUser', loginJsonData.uId)
+            return true
+          }
+    }
+
+    loginApp = async () => {
+        const loginJsonData = await this.callLoginApp(this.state.urlApi, this.state.options)
+        const result = await this.setCookiesSessionData(loginJsonData)
+        return result
+        // return loginAppliction(this.state.urlApi, this.state.options)
     }
 }
 

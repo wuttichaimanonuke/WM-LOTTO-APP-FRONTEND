@@ -24,6 +24,8 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
 import CheckTokenCookie from '../../script/cookie/CheckTokenCookie'
+import ManageCookie from '../../script/cookie/ManageCookie'
+import { isNullOrUndefined, isNull } from 'util';
 
 // import Widget03 from '../../views/Widgets/Widget03'
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
@@ -456,6 +458,7 @@ const mainChartOpts = {
   },
 };
 
+/*
 async function asyncCheckTokenCookie () {
   var result = false
   var checkTokenCookie = new CheckTokenCookie()
@@ -464,8 +467,10 @@ async function asyncCheckTokenCookie () {
     window.location = '/#/Login'
   }
 }
+*/
 
 class Dashboard extends Component {
+  //Begin WM Add.
   constructor(props) {
     super(props);
     console.log('Component Dashboard!!!')
@@ -476,8 +481,32 @@ class Dashboard extends Component {
       dropdownOpen: false,
       radioSelected: 2,
     };
-    asyncCheckTokenCookie()
+    this.asyncCheckTokenCookie()
   }
+
+  /**
+   * Check cookies is expire.
+   */
+  asyncCheckTokenCookie = async () => {
+    var result = false
+    var checkTokenCookie = new CheckTokenCookie()
+    var manageCookie = new ManageCookie()
+    if (!((manageCookie.getCookie('appToken') == '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
+      result = await ( await ( checkTokenCookie.getStatusCheck()
+                              .then(res => {
+                                return res
+                              })
+                            )
+                    )
+      if (!result) {
+        window.location = '/#/Login'
+      }
+    } else {
+      window.location = '/#/Login'
+    }
+    
+  }
+  //End WM Add.
 
   toggle() {
     this.setState({

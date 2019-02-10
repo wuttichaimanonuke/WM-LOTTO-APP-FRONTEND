@@ -6,6 +6,10 @@ import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler }
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
 
+import ManageCookie from '../../script/cookie/ManageCookie'
+import LogoutApp from '../../views/Pages/Login/LogoutApp'
+import { isNullOrUndefined, isNull } from 'util';
+
 const propTypes = {
   children: PropTypes.node,
 };
@@ -13,6 +17,23 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
+
+  //Begin WM ADD.
+  constructor(props){
+    super(props)
+    this.logoutApp = this.logoutApp.bind(this)
+  }
+
+  logoutApp = () => {
+    var manageCookie = new ManageCookie()
+    var logoutApp = new LogoutApp
+    if (!((manageCookie.getCookie('appToken') == '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
+      logoutApp.logoutApp()
+    }
+    window.location = '/#/login'
+  }
+  //Eed WM ADD
+
   render() {
 
     // eslint-disable-next-line
@@ -53,7 +74,7 @@ class DefaultHeader extends Component {
               <img src={'assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
-              <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
+              {/* <DropdownItem header tag="div" className="text-center"><strong>Account</strong></DropdownItem>
               <DropdownItem><i className="fa fa-bell-o"></i> Updates<Badge color="info">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-envelope-o"></i> Messages<Badge color="success">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-tasks"></i> Tasks<Badge color="danger">42</Badge></DropdownItem>
@@ -64,8 +85,8 @@ class DefaultHeader extends Component {
               <DropdownItem><i className="fa fa-usd"></i> Payments<Badge color="secondary">42</Badge></DropdownItem>
               <DropdownItem><i className="fa fa-file"></i> Projects<Badge color="primary">42</Badge></DropdownItem>
               <DropdownItem divider />
-              <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem>
-              <DropdownItem><i className="fa fa-lock"></i> Logout</DropdownItem>
+              <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem> */}
+              <DropdownItem><i className="fa fa-lock"></i> <span onClick={this.logoutApp}>Logout</span></DropdownItem>
             </DropdownMenu>
           </AppHeaderDropdown>
         </Nav>
