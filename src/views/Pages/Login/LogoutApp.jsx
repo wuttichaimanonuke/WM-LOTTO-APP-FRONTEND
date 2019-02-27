@@ -1,7 +1,8 @@
 import React from 'react'
 import ConfigurationApi from '../../../script/config/ConfigurationApi'
 import ManageCookie from '../../../script/cookie/ManageCookie'
-import { isNullOrUndefined, isNull } from 'util';
+import { isNullOrUndefined } from 'util';
+// import { isNullOrUndefined, isNull } from 'util';
 
 class LogoutApp extends React.Component {
     constructor(props) {
@@ -33,12 +34,13 @@ class LogoutApp extends React.Component {
                                             })
                                         )
                                 )
+        return response
         // console.log('response from logout api = {}',response)
     }
 
     logoutApp = async () => {
         var manageCookie = new ManageCookie()
-        if (!((manageCookie.getCookie('appToken') == '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
+        if (!((manageCookie.getCookie('appToken') === '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
             // console.log('befor call api logout check token. token is = ',this.state.token)
             this.callLogoutApp(this.state.urlApi, this.state.options)
             document.cookie = 'appToken=;'

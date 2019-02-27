@@ -4,6 +4,7 @@ const ConfigApiIp = 'http://localhost'
 const ConfigApiPort = '8888'
 const ConfigApiList = {
     'tokenlogin_checkThisTokenByTkUid' : '/tokenlogin/checkThisTokenByTkUid'
+    , 'tokenlogin_checkTokenIsExpire' : '/tokenlogin/checkTokenIsExpire'
     , 'login_app_login' : '/login_app/login'
     , 'login_app_login_func' : '/login_app/login_func'
     , 'login_app_logout_proc' : '/login_app/logout_proc'

@@ -8,7 +8,8 @@ import sygnet from '../../assets/img/brand/sygnet.svg'
 
 import ManageCookie from '../../script/cookie/ManageCookie'
 import LogoutApp from '../../views/Pages/Login/LogoutApp'
-import { isNullOrUndefined, isNull } from 'util';
+import { isNullOrUndefined } from 'util';
+// import { isNullOrUndefined, isNull } from 'util';
 
 const propTypes = {
   children: PropTypes.node,
@@ -26,8 +27,8 @@ class DefaultHeader extends Component {
 
   logoutApp = () => {
     var manageCookie = new ManageCookie()
-    var logoutApp = new LogoutApp
-    if (!((manageCookie.getCookie('appToken') == '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
+    var logoutApp = new LogoutApp()
+    if (!((manageCookie.getCookie('appToken') === '') || (isNullOrUndefined(manageCookie.getCookie('appToken'))))) {
       logoutApp.logoutApp()
     }
     window.location = '/#/login'

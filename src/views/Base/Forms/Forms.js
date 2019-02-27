@@ -38,6 +38,20 @@ class Forms extends Component {
     };
   }
 
+  createSelectItemsYears() {
+    let items = []
+    let d = new Date()
+    let n = d.getFullYear()
+    for (let i = n; i >= n-1; i--) {
+      items.push(<option key={i} value={i}>{i+543}</option>)
+    }
+    return items
+  }
+
+  onDropdownSelected(e) {
+    console.log("THE VAL", e.target.value)
+  }
+
   toggle() {
     this.setState({ collapse: !this.state.collapse });
   }
@@ -78,7 +92,8 @@ class Forms extends Component {
                     <FormGroup>
                       <Label htmlFor="ccmonth">Month</Label>
                       <Input type="select" name="ccmonth" id="ccmonth">
-                        <option value="1">1</option>
+                        {this.createSelectItemsYears()}
+                        {/* <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -89,7 +104,7 @@ class Forms extends Component {
                         <option value="9">9</option>
                         <option value="10">10</option>
                         <option value="11">11</option>
-                        <option value="12">12</option>
+                        <option value="12">12</option> */}
                       </Input>
                     </FormGroup>
                   </Col>

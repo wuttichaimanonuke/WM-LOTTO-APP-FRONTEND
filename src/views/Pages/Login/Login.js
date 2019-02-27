@@ -3,16 +3,32 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGr
 
 //Begin WM ADD.
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import CheckTokenCookie from '../../../script/cookie/CheckTokenCookie';
-import { isNullOrUndefined, isNull } from 'util';
+// import CheckTokenCookie from '../../../script/cookie/CheckTokenCookie';
+import CheckTokenSessionStorage from '../../../script/storage/CheckTokenSessionStorage';
+import { isNullOrUndefined } from 'util';
 import LoginApp from './LoginApp';
 //End WM ADD.
 
 //Begin WM ADD.
+async function asyncCheckTokenSessionStorage () {
+  /**
+   * Check session storage is expire.
+   */
+    var result = false
+    var checkTokenSessionStorage = new CheckTokenSessionStorage()
+    result = await checkTokenSessionStorage.getStatusCheck()
+    if (result) {
+      window.location = '/#/dashboard'
+    }
+}
+
+/*
 async function asyncCheckTokenCookie () {
+*/
   /**
    * Check cookies is expire.
    */
+/*
     var result = false
     var checkTokenCookie = new CheckTokenCookie()
     result = await checkTokenCookie.getStatusCheck()
@@ -20,6 +36,7 @@ async function asyncCheckTokenCookie () {
       window.location = '/#/dashboard'
     }
 }
+*/
 
 async function asyncLogin (username, password) {
   /**
@@ -50,11 +67,31 @@ class Login extends Component {
       , warningText: 'Modal warning text.'
       , warningModalTitle: 'Warning.'
     }
+    this.handleUsernameKeydown  = this.handleUsernameKeydown .bind(this)
+    this.handlePasswordKeydown  = this.handlePasswordKeydown .bind(this)
     this.handleUsernameChange = this.handleUsernameChange.bind(this)
     this.handlePasswordChange = this.handlePasswordChange.bind(this)
     this.toggleWarning = this.toggleWarning.bind(this)
     this.checkLogin = this.checkLogin.bind(this)
-    asyncCheckTokenCookie()
+    this.okButtonFocus = this.okButtonFocus.bind()
+    // asyncCheckTokenCookie()
+    asyncCheckTokenSessionStorage()
+  }
+
+  okButtonFocus() {
+    document.getElementById("warningOk").focus()
+  }
+
+  handleUsernameKeydown(event) {
+    if (event.key === 'Enter') {
+      this.checkLogin()
+    }
+  }
+
+  handlePasswordKeydown(event) {
+    if (event.key === 'Enter') {
+      this.checkLogin()
+    }
   }
 
   handleUsernameChange(event) {
@@ -66,8 +103,8 @@ class Login extends Component {
   }
 
   checkLogin = () => {
-    if ( (this.state.userName == '') || (isNullOrUndefined(this.state.userName)) ||
-         (this.state.passWord == '') || (isNullOrUndefined(this.state.passWord)) ) {
+    if ( (this.state.userName === '') || (isNullOrUndefined(this.state.userName)) ||
+         (this.state.passWord === '') || (isNullOrUndefined(this.state.passWord)) ) {
       this.setState({
         warningText: 'กรอกข้อมูล Username และ Password ให้ครบถ้วน',
         warningModalTitle: 'Warning Login.',
@@ -76,7 +113,7 @@ class Login extends Component {
     } else {
       asyncLogin(this.state.userName, this.state.passWord)
       this.setState({
-        warningText: 'Username Or Password incorrect.',
+        warningText: 'Username หรือ Password ไม่ถูกต้อง.',
         warningModalTitle: 'Warning Login.',
       });
       this.toggleWarning()
@@ -108,7 +145,7 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" value={this.state.value} onChange={this.handleUsernameChange} />
+                        <Input type="text" placeholder="Username" autoComplete="username" value={this.state.value} onChange={this.handleUsernameChange} onKeyDown={this.handleUsernameKeydown} />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -116,7 +153,7 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" value={this.state.value} onChange={this.handlePasswordChange} />
+                        <Input type="password" placeholder="Password" autoComplete="current-password" value={this.state.value} onChange={this.handlePasswordChange} onKeyDown={this.handlePasswordKeydown} />
                       </InputGroup>
                       <Row>
                         <Col xs="6">
@@ -129,14 +166,14 @@ class Login extends Component {
                     </Form>
                   </CardBody>
 
-                  <Modal isOpen={this.state.warning} toggle={this.toggleWarning}
+                  <Modal isOpen={this.state.warning} toggle={this.toggleWarning} onOpened={this.okButtonFocus}
                        className={'modal-warning ' + this.props.className}>
                   <ModalHeader toggle={this.toggleWarning}>{this.state.warningModalTitle}</ModalHeader>
                   <ModalBody>
                     {this.state.warningText}
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="warning" onClick={this.toggleWarning}>OK</Button>
+                    <Button color="warning" onClick={this.toggleWarning} id={"warningOk"}>OK</Button>
                     {/* {' '}
                     <Button color="secondary" onClick={this.toggleWarning}>Cancel</Button> */}
                   </ModalFooter>

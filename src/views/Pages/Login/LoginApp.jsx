@@ -1,5 +1,6 @@
 import React from 'react'
-import { isNullOrUndefined, isNull } from 'util'
+import { isNullOrUndefined } from 'util'
+// import { isNullOrUndefined, isNull } from 'util'
 import ConfigurationApi from '../../../script/config/ConfigurationApi'
 
 class LoginApp extends React.Component {
@@ -54,31 +55,35 @@ class LoginApp extends React.Component {
                                             })
                                             .catch(err => {
                                                 console.log('error : ',err)
+                                                return JSON.stringify(
+                                                    {
+                                                        'resultCode' : 'LOGI204'
+                                                    })
                                             })
                                         )
                                 )
         return await response
     }
 
-    setCookiesSessionData = async (loginJsonData) => {
-        if ( (isNullOrUndefined(loginJsonData.token)) || (isNullOrUndefined(loginJsonData.uId)) ) {
-            document.cookie = ''
-            document.cookie = ''
-            sessionStorage.setItem('appToken', null)
-            sessionStorage.setItem('appUser', null)
-            return false
-          } else {
+    setSessionStorageData = async (loginJsonData) => {
+        if ( loginJsonData.resultCode === 'LOGI200' ) {
             document.cookie = 'appToken='+loginJsonData.token+';'
             document.cookie = 'appUser='+loginJsonData.uId+';'
             sessionStorage.setItem('appToken', loginJsonData.token)
             sessionStorage.setItem('appUser', loginJsonData.uId)
             return true
+          } else {
+            document.cookie = ''
+            document.cookie = ''
+            sessionStorage.setItem('appToken', null)
+            sessionStorage.setItem('appUser', null)
+            return false
           }
     }
 
     loginApp = async () => {
         const loginJsonData = await this.callLoginApp(this.state.urlApi, this.state.options)
-        const result = await this.setCookiesSessionData(loginJsonData)
+        const result = await this.setSessionStorageData(loginJsonData)
         return result
         // return loginAppliction(this.state.urlApi, this.state.options)
     }
